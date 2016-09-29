@@ -110,7 +110,7 @@ config.babel = {
 }
 
 /**
- * 設定 - Jade
+ * 設定 - pug
  */
 config.pug = {
     src: [appPath + '/*.pug', appPath + '/**/*.pug'],
@@ -219,17 +219,17 @@ gulp.task('browserSync', () => {
 
 /**
  * =================================
- * # Jade
- * Jade テンプレートのコンパイル
+ * # pug
+ * pug テンプレートのコンパイル
  * =================================
  */
 gulp.task('pug', () => {
     return gulp.src(config.pug.src)
-
         .pipe($.plumber({errorHandler: $.notify.onError('<%= error.message %>')}))
-        .pipe($.changed('dist', {extension: '.html'}))
+
+        // .pipe($.changed(distPath, {extension: '.html'}))
         .pipe($.if(global.isWatching, $.cached('pug')))
-        .pipe($.pugInheritance({basedir: appPath + '/'}))
+        .pipe($.pugInheritance({basedir: appPath}))
         .pipe($.filter(function (file) {
             return !/\/_/.test(file.path) && !/^_/.test(file.relative);
         }))
@@ -240,7 +240,7 @@ gulp.task('pug', () => {
             pretty: true,
             cache: true,
             escapePre: true,
-            basedir: appPath + "/",
+            basedir: appPath
         }))
         .pipe(gulp.dest(config.pug.dist))
         .pipe($.size({title: 'HTML'}))
